@@ -8,6 +8,8 @@ export const signup = async (req, res) => {
     try {
         if (password.length < 6)
             return res.status(400).json({ message: "Password must be at least 6 characters long" });
+        if (handle.length < 4)
+            return res.status(400).json({ message: "handle must be at least 4 characters long" });
         if (password !== confirmPassword)
             return res.status(400).json({ message: "Passwords do not match" });
         const userBymail = await User.findOne({ email });
