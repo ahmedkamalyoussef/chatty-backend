@@ -82,15 +82,37 @@ export const updateProfilePic = async (req, res) => {
         if (!profilePicture) {
             return res.status(400).json({ message: "Profile picture is required" });
         }
-        const uplouderesonse = await cloudinary.uploader.upload(profilePicture);
-        const user = await User.findByIdAndUpdate(userId, { profilePicture: uplouderesonse.secure_url }, { new: true });
+
+        // Find the current user to get the old image URL
+        const user = await User.findById(userId);
+        const oldImageUrl = user.profilePicture;
+
+        // Upload the new image
+        const uploadResponse = await cloudinary.uploader.upload(profilePicture);
+
+        // Update user with new image URL
+        user.profilePicture = uploadResponse.secure_url;
+        await user.save();
+
+        // Delete old image if it exists
+        if (oldImageUrl) {
+            // Extract public_id from URL
+            const segments = oldImageUrl.split('/');
+            const filename = segments[segments.length - 1];
+            const publicId = filename.split('.')[0]; // remove extension
+
+            await cloudinary.uploader.destroy(publicId);
+        }
+
         res.status(200).json(user);
     } catch (error) {
         console.error("Error updating profile picture:", error);
         res.status(500).json({ message: "Internal server error" });
     }
+};
 
-}
+
+
 export const authCheck = (req, res) => {
     try {
         res.status(200).json(req.user);
