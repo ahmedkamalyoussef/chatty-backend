@@ -1,6 +1,7 @@
 import express from 'express';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
+import friendshipRoutes from './routes/friends.route.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -19,6 +20,7 @@ const PORT = process.env.PORT;
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/messages", messageRoutes);
+app.use("/api/v1/friends",friendshipRoutes );
 
 server.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
