@@ -15,8 +15,11 @@ const messageSchema = new mongoose.Schema({
     content: {
         type: String
     },
-    media: {
-        type: String
+    media: { type: String },
+    type: {
+      type: String,
+      enum: ["text", "image", "audio"], // ✅ classify message type
+      default: "text",
     },
 }, { timestamps: true });
 
