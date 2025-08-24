@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.get('/friends',protect,getFriends);
 router.get('/:userToChatId', protect, getMessages);
-router.post('/send/:id', protect, sendMessage);
+router.post(['/send', '/send/:id'], protect, sendMessage);
 router.post('/doSomeThing/:id',protect, isDoingSomething);
 export default router;
